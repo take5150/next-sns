@@ -3,3 +3,4 @@ client/node_modules
 .vscode
 client/.next
 password.txt
+api/.env

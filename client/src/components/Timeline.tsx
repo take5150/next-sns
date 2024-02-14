@@ -1,23 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Post from "./Post";
 import apiClient from "../lib/apiClient";
+import { PostType } from "../types";
 
 const Timeline = () => {
   const [postText, setPostText] = useState<string>();
+  const [latestPosts, setLatestPosts] = useState<PostType[]>([]);
 
+  // 投稿作成
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(postText);
     try {
-      await apiClient.post("/posts/post", {
+      const newPost = await apiClient.post("/posts/post", {
         content: postText,
       });
+      setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
       setPostText("");
     } catch (err) {
       console.log(err);
-      alert("投稿内容を記入してください。");
+      alert("ロググインをしてください。");
     }
   };
+
+  useEffect(() => {
+    const fetchLatestPosts = async () => {
+      try {
+        const respose = await apiClient.get("/posts/get_latest_post");
+        setLatestPosts(respose.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchLatestPosts();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -40,7 +55,9 @@ const Timeline = () => {
             </button>
           </form>
         </div>
-        <Post />
+        {latestPosts.map((post: PostType) => (
+          <Post key={post.id} post={post}></Post>
+        ))}
       </main>
     </div>
   );

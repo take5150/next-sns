@@ -14,10 +14,12 @@ const AuthContext = React.createContext<AuthCOntextType>({
   logout: () => {}
 });
 
+// カスタムフック
 export const useAuth = () => {
   return useContext(AuthContext);
 }
 
+// ReduxのProviderのような感じでコンポーネントを囲ってあげる
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string) => {
     localStorage.setItem("auth_token", token)
@@ -31,6 +33,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     login,
     logout
   }
-
+  // childrenには各コンポーネントが入る
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 };

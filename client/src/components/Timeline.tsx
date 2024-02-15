@@ -18,7 +18,7 @@ const Timeline = () => {
       setPostText("");
     } catch (err) {
       console.log(err);
-      alert("ロググインをしてください。");
+      alert("ログインをしてください。");
     }
   };
 
